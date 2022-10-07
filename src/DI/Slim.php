@@ -9,6 +9,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Middleware\ContentLengthMiddleware;
+use Tuupola\Middleware\JwtAuthentication;
 use UMA\DIC\Container;
 use UMA\DIC\ServiceProvider;
 use UMA\Assignment\Action\CreateMovie;
@@ -53,11 +54,13 @@ final class Slim implements ServiceProvider
             );
 
             $app->add(new ContentLengthMiddleware());
+//            $app->add(require __DIR__ . '/../App/Dependencies.php');
 
             $app->post('/login', LoginAction::class);
             $app->get('/movies/{id}', ListMovie::class);
             $app->get('/movies', ListMovie::class);
             $app->post('/movies', CreateMovie::class);
+//                ->addMiddleware($container->get(JwtAuthentication::class));
 
             return $app;
         });

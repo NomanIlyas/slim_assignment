@@ -29,12 +29,12 @@ return [
 
             // Path where Doctrine will cache the processed metadata
             // when 'dev_mode' is false.
-            'cache_dir' => APP_ROOT . '/../var/doctrine',
+            'cache_dir' => APP_ROOT . '/../../var/doctrine',
 
             // List of paths where Doctrine will search for
             // metadata. Metadata can be either YML/XML files or
             // annotated PHP classes.
-            'metadata_dirs' => [APP_ROOT . '/../src/Model'],
+            'metadata_dirs' => [APP_ROOT . '/../Model'],
 
             // The parameters Doctrine needs to connect to your database.
             // Refer to the Doctrine documentation to see the full list
@@ -43,8 +43,23 @@ return [
             // doesn't have a 'path', but needs 'host' and 'port' parameters among others).
             'connection' => [
                 'driver' => 'pdo_sqlite',
-                'path' => APP_ROOT . '/../var/assignment.sqlite'
+                'path' => APP_ROOT . '/../../var/assignment.sqlite'
             ]
-        ]
+        ],
+        'jwt_authentication' => [
+            'secret' => 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY2NTE0Nzk1MCwiaWF0IjoxNjY1MTQ3OTUwfQ.uqRLwOdMhAUZX3QCcrkfzul_r4Op32WBV0dVOa4FKUU',
+            'algorithm' => 'HS256',
+            'secure' => false, // only for localhost for prod and test env set true
+            'error' => static function ($response, $arguments) {
+                $data['status'] = 401;
+                $data['error'] = 'Unauthorized/'. $arguments['message'];
+                return $response
+                    ->withHeader('Content-Type', 'application/json;charset=utf-8')
+                    ->getBody()->write(json_encode(
+                        $data,
+                        JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+                    ));
+            }
+        ],
     ]
 ];

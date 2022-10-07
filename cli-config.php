@@ -12,7 +12,7 @@ use UMA\DIC\Container;
 use UMA\Assignment\DI;
 
 /** @var Container $cnt */
-$cnt = require __DIR__ . '/config/bootstrap.php';
+$cnt = require __DIR__ . '/src/App/bootstrap.php';
 
 $cnt->register(new DI\Doctrine());
 
