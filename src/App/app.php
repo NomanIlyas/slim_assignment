@@ -2,19 +2,31 @@
 
 declare(strict_types=1);
 
-use Slim\App;
-use UMA\DIC\Container;
-use UMA\Assignment\DI;
+use DI\ContainerBuilder;
+use Slim\Factory\AppFactory;
+use Slim\Handlers\Strategies\RequestHandler;
 
-/** @var Container $cnt */
-$cnt = require __DIR__ . '/bootstrap.php';
-$cnt->set('validator', function () { return new Awurth\SlimValidation\Validator; });
-$cnt->register(new DI\Doctrine());
-$cnt->register(new DI\Slim());
-//$cnt->set('dependence', require __DIR__ . '/../App/Dependencies.php');
-//$cnt["JwtAuthentication"] =
-/** @var App $app */
-$app =  $cnt->get(App::class);
-//$cnt['JwtAuthentication'] = require __DIR__ . '/../App/middleware.php';
+require __DIR__.'/../../vendor/autoload.php';
 
+$settings = (require __DIR__ . '/settings.php');
+
+// Set up dependencies
+$containerBuilder = new ContainerBuilder();
+//if($settings['di_compilation_path']) {
+//    $containerBuilder->enableCompilation($settings['di_compilation_path']);
+//}
+
+(require __DIR__ . '/dependencies.php')($containerBuilder, $settings);
+
+// Create app
+AppFactory::setContainer($containerBuilder->build());
+$app = AppFactory::create();
+
+(require __DIR__ . '/../../cli-config.php')($app);
+
+// Assign matched route arguments to Request attributes for PSR-15 handlers
+$app->getRouteCollector()->setDefaultInvocationStrategy(new RequestHandler(true));
+
+// Register middleware
+(require __DIR__ . '/middleware.php')($app);
 return $app;

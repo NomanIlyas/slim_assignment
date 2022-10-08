@@ -54,7 +54,7 @@ final class Slim implements ServiceProvider
             );
 
             $app->add(new ContentLengthMiddleware());
-//            $app->add(require __DIR__ . '/../App/Dependencies.php');
+//            $app->add(require __DIR__ . '/../App/dependencies.php');
 
             $app->post('/login', LoginAction::class);
             $app->get('/movies/{id}', ListMovie::class);

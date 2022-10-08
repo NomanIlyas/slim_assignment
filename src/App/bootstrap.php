@@ -1,12 +1,15 @@
 <?php
 
-declare(strict_types=1);
+use DI\ContainerBuilder;
 
-// bootstrap file for public/index.php and cli-config.php
+require 'vendor/autoload.php';
 
-use UMA\DIC\Container;
+// Instantiate PHP-DI ContainerBuilder
+$containerBuilder = new ContainerBuilder();
 
+//$settings = include '/../src/settings.php';
+$settings = require __DIR__ . '/settings.php';
+$settings($containerBuilder);
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-
-return new Container(require __DIR__ . '/settings.php');
+// Build PHP-DI Container instance
+return $containerBuilder->build();
