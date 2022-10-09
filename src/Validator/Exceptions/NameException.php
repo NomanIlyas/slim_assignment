@@ -1,6 +1,6 @@
 <?php
 
-namespace UMA\Assignment\Validator\Exceptions;
+namespace Noman\Assignment\Validator\Exceptions;
 
 use Respect\Validation\Exceptions\ValidationException;
 

@@ -2,21 +2,16 @@
 
 declare(strict_types=1);
 
-namespace UMA\Assignment\Action;
+namespace Noman\Assignment\Action;
 
-use Exception;
-use JsonException;
-use Nyholm\Psr7;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Respect\Validation\Validator;
-use UMA\Assignment\Service\MovieService;
+use Noman\Assignment\Service\MovieService;
+
 use function json_encode;
 
-final class CreateMovie implements RequestHandlerInterface
+class CreateMovie
 {
     protected MovieService $movieService;
 
@@ -25,14 +20,10 @@ final class CreateMovie implements RequestHandlerInterface
         $this->movieService = $movieService;
     }
 
-    /**
-     * @throws NotFoundExceptionInterface
-     * @throws ContainerExceptionInterface
-     * @throws JsonException
-     * @throws Exception
-     */
-    public function handle(ServerRequestInterface $request): ResponseInterface
+
+    public function __invoke(ServerRequestInterface $request, Response $response, array $args): Response
     {
+        $statusCode = 201;
         $validator = $this->movieService->container->get('validator')
             ->validate($request, [
                 'name' => Validator::stringType()->notBlank(),
@@ -47,13 +38,13 @@ final class CreateMovie implements RequestHandlerInterface
             $data = $this->movieService->createMovie($request);
         } else {
             $data = $validator->getErrors();
+            $statusCode = 400;
         }
-        return new Psr7\Response(
-            201,
-            ['Content-Type' => 'application/json'],
-            Psr7\Stream::create(
-                json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . PHP_EOL
-            )
-        );
+
+        // custom response with header and data
+        $response->getBody()->write(json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . PHP_EOL);
+        $response->withHeader('Content-type', 'application/json');
+        $response->withStatus($statusCode);
+        return $response;
     }
 }

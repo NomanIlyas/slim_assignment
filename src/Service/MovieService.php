@@ -1,12 +1,11 @@
 <?php
 
-namespace UMA\Assignment\Service;
+namespace Noman\Assignment\Service;
 
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManager;
+use DI\Container;
 use Psr\Http\Message\ServerRequestInterface;
-use UMA\DIC\Container;
-use UMA\Assignment\Model\Movie;
+use Noman\Assignment\Model\Movie;
 
 class MovieService
 {
@@ -27,22 +26,22 @@ class MovieService
         $movie->setReleasedDate(new DateTimeImmutable($body['release_date']));
         $movie->setRating($body['ratings']);
 
-        $this->container->get(EntityManager::class)->persist($movie, true);
-        $this->container->get(EntityManager::class)->flush();
+        $this->container->get('EntityManager')->persist($movie, true);
+        $this->container->get('EntityManager')->flush();
 
         return $movie;
     }
 
     public function getAllMovies()
     {
-        return $this->container->get(EntityManager::class)
+        return $this->container->get('EntityManager')
             ->getRepository(Movie::class)
             ->findAll();
     }
 
-    public function getMovie(int $listingId)
+    public function getMovie(string $listingId)
     {
-        return $this->container->get(EntityManager::class)
+        return $this->container->get('EntityManager')
             ->getRepository(Movie::class)
             ->find($listingId);
     }

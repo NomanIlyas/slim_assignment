@@ -1,44 +1,42 @@
 <?php
 
-namespace UMA\Assignment\Action;
+namespace Noman\Assignment\Action;
 
-use Nyholm\Psr7;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Respect\Validation\Validator;
-use UMA\Assignment\Service\UserService;
 
-final class LoginAction implements RequestHandlerInterface
+class LoginAction
 {
-    protected UserService $userService;
+    private ContainerInterface $container;
 
-    public function __construct(UserService $userService)
+    public function __construct(ContainerInterface $container)
     {
-        $this->userService = $userService;
+        $this->container = $container;
     }
 
-
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    public function __invoke(ServerRequestInterface $request, Response $response, array $args): Response
     {
-        $validator = $this->userService->container->get('validator')
+        $statusCode = 201;
+        $validator = $this->container->get('validator')
             ->validate($request, [
                     'username' => Validator::stringType()->notBlank(),
                     'password' => Validator::stringType()->notBlank()
                 ]
             );
+
         if ($validator->isValid()) {
-            // get the movie object and set into response data
-            $data = $this->userService->login($request);
+            $data = $this->container->get('userService')->login($request);
         } else {
             $data = $validator->getErrors();
+            $statusCode = 400;
         }
-        return new Psr7\Response(
-            201,
-            ['Content-Type' => 'application/json'],
-            Psr7\Stream::create(
-                json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . PHP_EOL
-            )
-        );
+
+        // custom response with header and data
+        $response->withHeader('Content-type', 'application/json');
+        $response->getBody()->write(json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . PHP_EOL);
+        $response->withStatus($statusCode);
+        return $response;
     }
 }

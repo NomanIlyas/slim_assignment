@@ -1,6 +1,6 @@
 <?php
 
-namespace UMA\Assignment\Model\Generator;
+namespace Noman\Assignment\Model\Generator;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Entity;

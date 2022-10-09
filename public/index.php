@@ -1,5 +1,4 @@
 <?php
 
-declare(strict_types=1);
-
-require __DIR__ . '/../src/App/app.php';
+// Run Slim App instance
+(require __DIR__ . '/../config/bootstrap.php')['app']->run();

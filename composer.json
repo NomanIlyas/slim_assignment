@@ -7,20 +7,20 @@
         "ext-openssl": "*",
         "ext-sqlite3": "*",
         "awurth/slim-validation": "^3.4",
+        "doctrine/annotations": "^1.13",
         "doctrine/dbal": "^2.6",
-        "doctrine/orm": "^2.12",
+        "doctrine/orm": "^2.13",
+        "php-di/php-di": "^6.4",
         "ramsey/uuid": "^4.5",
         "ramsey/uuid-doctrine": "^1.8",
         "slim/psr7": "^1.5",
-        "php-di/php-di": "^6.4",
         "slim/slim": "^4.10",
         "symfony/cache": "^6.1",
-        "symfony/console": "^6.1",
-        "tuupola/slim-jwt-auth": "^3.6"
+        "symfony/console": "^6.1"
     },
     "autoload": {
         "psr-4": {
-            "UMA\\Assignment\\": "src/"
+            "Noman\\Assignment\\": "src/"
         }
     },
     "scripts": {

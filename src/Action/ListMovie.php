@@ -2,17 +2,15 @@
 
 declare(strict_types=1);
 
-namespace UMA\Assignment\Action;
+namespace Noman\Assignment\Action;
 
-use Nyholm\Psr7;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use UMA\Assignment\Model\Movie;
-use UMA\Assignment\Service\MovieService;
+use Noman\Assignment\Model\Movie;
+use Noman\Assignment\Service\MovieService;
 use function json_encode;
 
-final class ListMovie implements RequestHandlerInterface
+class ListMovie
 {
     protected MovieService $movieService;
 
@@ -21,14 +19,10 @@ final class ListMovie implements RequestHandlerInterface
         $this->movieService = $movieService;
     }
 
-    /**
-     * @throws \JsonException
-     */
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    public function __invoke(ServerRequestInterface $request, Response $response, array $args): Response
     {
-        $route = $request->getAttribute('route');
-        $listingId = (!empty($route)) ? $route->getArgument('id') : null;
-        if (!empty($listingId) && is_int($listingId)) {
+        $listingId = $request->getAttribute('id');
+        if (!empty($listingId)) {
             /** @var Movie $data */
             $data = $this->movieService->getMovie($listingId);
         } else {
@@ -36,11 +30,10 @@ final class ListMovie implements RequestHandlerInterface
             $data = $this->movieService->getAllMovies();
         }
 
-        return new Psr7\Response(
-            200,
-            ['Content-Type' => 'application/json'],
-            Psr7\Stream::create(
-                json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . PHP_EOL)
-            );
+        // custom response with header and data
+        $response->withHeader('Content-type', 'application/json');
+        $response->getBody()->write(json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . PHP_EOL);
+        $response->withStatus(200);
+        return $response;
     }
 }
