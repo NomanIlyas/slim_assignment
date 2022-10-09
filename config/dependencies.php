@@ -12,7 +12,9 @@ use Tuupola\Middleware\JwtAuthentication;
 
 return function (Container $container) {
     // set validator in container
-    $container->set('validator', function () { return new Awurth\SlimValidation\Validator; });
+    $container->set('validator', function () {
+        return new Awurth\SlimValidation\Validator;
+    });
 
     // inject entity Manager into container
     $container->set('EntityManager', function (Container $c): EntityManager {
@@ -44,7 +46,7 @@ return function (Container $container) {
     });
 
     // set JwtAuthentication into container
-    $container->set('JwtAuthentication', static function (Container $container):  JwtAuthentication {
+    $container->set('JwtAuthentication', function (Container $container):  JwtAuthentication {
         /** @var array $settings */
         $container = $container->get('settings');
         return new  JwtAuthentication(

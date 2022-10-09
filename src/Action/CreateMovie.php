@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Noman\Assignment\Action;
 
+use DI\DependencyException;
+use DI\NotFoundException;
+use JsonException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator;
@@ -21,6 +24,11 @@ class CreateMovie
     }
 
 
+    /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws JsonException
+     */
     public function __invoke(ServerRequestInterface $request, Response $response, array $args): Response
     {
         $statusCode = 201;

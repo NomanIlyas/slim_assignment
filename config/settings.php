@@ -48,7 +48,7 @@ $settings = [
         'secret' => 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDHAkqU6NyGKUjf+Zlmge/SMELOmTnmo2IeHoPJxzP2iB+lmBX4sMBhi1r3ph6DT0T0bMFKIK7ptWYuTWcsLuoAm/TqieiU8sfSNE2KPNcmoRitgr4qBYgk4mbilYJvrB5jenZYCVCveBzaTFenDkxXNiEdv3KnIaSYtYBd0uCfVwIDAQAB',
         'algorithm' => 'HS256',
         'secure' => false, // only for localhost for prod and test env set true
-        'error' => static function ($response, $arguments) {
+        'error' => function ($response, $arguments) {
             $data['status'] = 401;
             $data['error'] = 'Unauthorized/'. $arguments['message'];
             return $response
