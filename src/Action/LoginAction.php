@@ -2,6 +2,7 @@
 
 namespace Noman\Assignment\Action;
 
+use Firebase\JWT\JWT;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface;
@@ -27,7 +28,11 @@ class LoginAction
             );
 
         if ($validator->isValid()) {
-            $data = $this->container->get('userService')->login($request);
+            $user = $this->container->get('userService')->login($request);
+            $settings = $this->container->get('settings');
+            $token = JWT::encode($user, $settings['jwt_authentication']['secret'], $settings['jwt_authentication']['algorithm']);
+            $user->setToken($token);
+            $data = $user;
         } else {
             $data = $validator->getErrors();
             $statusCode = 400;
