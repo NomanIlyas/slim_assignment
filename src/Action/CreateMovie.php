@@ -42,7 +42,7 @@ class CreateMovie
         }
 
         // custom response with header and data
-        $response->getBody()->write(json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . PHP_EOL);
+        $response->getBody()->write(json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . PHP_EOL);
         $response->withHeader('Content-type', 'application/json');
         $response->withStatus($statusCode);
         return $response;

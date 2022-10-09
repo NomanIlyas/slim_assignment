@@ -1,7 +1,7 @@
 <?php
 
 //define constant
-define('APP_ROOT', __DIR__);
+const APP_ROOT = __DIR__;
 
 
 // Should be set to 0 in production
@@ -43,7 +43,22 @@ $settings = [
             'driver' => 'pdo_sqlite',
             'path' => APP_ROOT . '/../var/assignment.sqlite'
         ]
-    ]
+    ],
+    'jwt_authentication' => [
+        'secret' => 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDHAkqU6NyGKUjf+Zlmge/SMELOmTnmo2IeHoPJxzP2iB+lmBX4sMBhi1r3ph6DT0T0bMFKIK7ptWYuTWcsLuoAm/TqieiU8sfSNE2KPNcmoRitgr4qBYgk4mbilYJvrB5jenZYCVCveBzaTFenDkxXNiEdv3KnIaSYtYBd0uCfVwIDAQAB',
+        'algorithm' => 'HS256',
+        'secure' => false, // only for localhost for prod and test env set true
+        'error' => static function ($response, $arguments) {
+            $data['status'] = 401;
+            $data['error'] = 'Unauthorized/'. $arguments['message'];
+            return $response
+                ->withHeader('Content-Type', 'application/json;charset=utf-8')
+                ->getBody()->write(json_encode(
+                    $data,
+                    JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+                ));
+        }
+    ],
 ];
 
 return $settings;

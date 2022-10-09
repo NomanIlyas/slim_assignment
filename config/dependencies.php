@@ -8,6 +8,7 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Noman\Assignment\Service\MovieService;
 use Noman\Assignment\Service\UserService;
+use Tuupola\Middleware\JwtAuthentication;
 
 return function (Container $container) {
     // set validator in container
@@ -40,6 +41,15 @@ return function (Container $container) {
     });
     $container->set('movieService', function (Container $c): MovieService {
         return new MovieService($c);
+    });
+
+    // set JwtAuthentication into container
+    $container->set('JwtAuthentication', static function (Container $container):  JwtAuthentication {
+        /** @var array $settings */
+        $container = $container->get('settings');
+        return new  JwtAuthentication(
+            $container['jwt_authentication'],
+        );
     });
 
     return $container;
