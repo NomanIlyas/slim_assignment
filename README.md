@@ -3,6 +3,8 @@
 The project to demonstrate how to integrate Doctrine 2.x, develop rest api and jwt authentication into Slim. The project created under the guideline 
 of Slim official documentation [Using Doctrine with Slim].
 
+Please find API collection Here : https://www.getpostman.com/collections/30511949eb450242fab6
+
 ## Requirements
 
 - PHP 8.1+
@@ -28,18 +30,18 @@ slim_assignment
 │
 ├── config
 │   └── bootstrap.php         -- HTTP front controller (requires ../bootstrap.php)
-│   └── contaoner.php         -- HTTP front controller (requires ../bootstrap.php)
-│   └── dependencies.php      -- HTTP front controller (requires ../bootstrap.php)
-│   └── middleware.php        -- HTTP front controller (requires ../bootstrap.php)
-│   └── routes.php            -- HTTP front controller (requires ../bootstrap.php)
-│   └── setting.php           -- HTTP front controller (requires ../bootstrap.php)
+│   └── contaoner.php         -- Initiate container 
+│   └── dependencies.php      -- Inject dependencies into container
+│   └── middleware.php        -- Middleware register
+│   └── routes.php            -- Routes listing 
+│   └── setting.php           -- Settings currently in use
 │
 ├── public
-│   └── index.php           -- HTTP front controller (requires ../bootstrap.php)
+│   └── index.php           -- Main index file (requires ../bootstrap.php)
 │   └── .htaccess           -- Redirection file
 │
 ├── src
-│   ├── Action              -- Slim request handlers
+│   ├── Action              -- Slim invokable actions
 │   │   ├── CreateMovie.php
 │   │   └── ListMovie.php
 │   │   └── LoginAction.php
@@ -67,8 +69,6 @@ Strep 2:
 
 You can access this route to make API call `http://localhost:8000`
 Make sure there is no process running on `8000` port into your local machine.
-
-NOTE: Please find the API collection : https://www.getpostman.com/collections/30511949eb450242fab6
 
 ```bash
 $ curl -X POST localhost:8000/login   // get jwt access token
