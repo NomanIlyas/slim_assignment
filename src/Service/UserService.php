@@ -29,12 +29,11 @@ class UserService
 
     public function login($request): bool|User
     {
+
         $body = $request->getParsedBody();
         $user = $this->validateCredential($body['username'], $body['password']);
         if ($user instanceof User) {
             $user->setToken(bin2hex(openssl_random_pseudo_bytes(8)));
-            $user->setTokenExpire(date('Y-m-d H:i:s', strtotime('+4 hour')));
-
             $this->container->get('EntityManager')->persist($user);
             $this->container->get('EntityManager')->flush();
 

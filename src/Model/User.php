@@ -32,9 +32,6 @@ final class User implements JsonSerializable
     #[Column(type: 'string', nullable: true)]
     private string $token;
 
-    #[Column(type: 'string', nullable: true)]
-    private string $tokenExpire;
-
     #[Column(name: 'bcrypt_hash', type: 'string', length: 120)]
     private string $hash;
 
@@ -97,14 +94,6 @@ final class User implements JsonSerializable
     }
 
     /**
-     * @return string
-     */
-    public function getToken(): string
-    {
-        return $this->token;
-    }
-
-    /**
      * @param string $token
      */
     public function setToken(string $token): void
@@ -113,20 +102,13 @@ final class User implements JsonSerializable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTokenExpire(): string
+    public function getToken(): ?string
     {
-        return $this->tokenExpire;
+        return $this->token;
     }
 
-    /**
-     * @param string $tokenExpire
-     */
-    public function setTokenExpire(string $tokenExpire): void
-    {
-        $this->tokenExpire = $tokenExpire;
-    }
 
     /**
      * {@inheritdoc}
@@ -135,7 +117,8 @@ final class User implements JsonSerializable
     {
         return [
             'email' => $this->getEmail(),
-            'token' => $this->getToken()
+            'username' => $this->getUsername(),
+            'token' => $this->getToken(),
         ];
     }
 }
