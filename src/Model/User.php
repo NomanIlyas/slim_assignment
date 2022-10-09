@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace UMA\Assignment\Model;
+namespace Noman\Assignment\Model;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping\Column;

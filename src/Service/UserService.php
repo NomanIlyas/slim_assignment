@@ -1,10 +1,9 @@
 <?php
 
-namespace UMA\Assignment\Service;
+namespace Noman\Assignment\Service;
 
-use Doctrine\ORM\EntityManager;
-use UMA\DIC\Container;
-use UMA\Assignment\Model\User;
+use DI\Container;
+use Noman\Assignment\Model\User;
 
 class UserService
 {
@@ -17,7 +16,7 @@ class UserService
 
     public function validateCredential(string $username, string $password): bool|User
     {
-        $user = $this->container->get(EntityManager::class)
+        $user = $this->container->get('EntityManager')
             ->getRepository(User::class)
             ->findOneBy([
                 'username' => $username
@@ -28,15 +27,16 @@ class UserService
         return false;
     }
 
-    public function login($request) {
+    public function login($request): bool|User
+    {
         $body = $request->getParsedBody();
         $user = $this->validateCredential($body['username'], $body['password']);
         if ($user instanceof User) {
             $user->setToken(bin2hex(openssl_random_pseudo_bytes(8)));
             $user->setTokenExpire(date('Y-m-d H:i:s', strtotime('+4 hour')));
 
-            $this->container->get(EntityManager::class)->persist($user, true);
-            $this->container->get(EntityManager::class)->flush();
+            $this->container->get('EntityManager')->persist($user);
+            $this->container->get('EntityManager')->flush();
 
             return $user;
         }

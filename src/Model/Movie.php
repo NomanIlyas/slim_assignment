@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace UMA\Assignment\Model;
+namespace Noman\Assignment\Model;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping\Column;
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use ReturnTypeWillChange;
-use UMA\Assignment\Model\Generator\UuidGenerator;
+use Noman\Assignment\Model\Generator\UuidGenerator;
 
 // The Movie class demonstrates how to annotate a simple PHP class to act as a Doctrine entity.
 
